@@ -824,3 +824,58 @@ func ValidateProtocol(protocol string) error {
 	}
 	return nil
 }
+
+func GetAllocatedIPAddress(annotations map[string]string, provider string, ifName string) string {
+	// default behaviour when no interface name is specified
+	// verify if a custom ifname is provided then annotation will be of form
+	// vm-overlay.default.ovn.net1.kubernetes.io/ip_address: 192.168.0.10
+	if ifName != "" {
+		provider = fmt.Sprintf("%s.%s", provider, ifName)
+
+	}
+	return annotations[fmt.Sprintf(IPAddressAnnotationTemplate, provider)]
+}
+
+func PerInterfaceIPAnnotationKey(nadName, nadNamespace, ifaceName string) string {
+	return fmt.Sprintf("%s.%s.kubernetes.io/ip_address.%s", nadName, nadNamespace, ifaceName)
+}
+
+func GetAllocatedCIDRAddress(annotations map[string]string, provider string, ifName string) string {
+	// default behaviour when no interface name is specified
+	// verify if a custom ifname is provided then annotation will be of form
+	// vm-overlay.default.ovn.net1.kubernetes.io/cidr: 192.168.0.0/24
+	if ifName != "" {
+		provider = fmt.Sprintf("%s.%s", provider, ifName)
+	}
+	return annotations[fmt.Sprintf(CidrAnnotationTemplate, provider)]
+}
+
+func GetAllocatedGateway(annotations map[string]string, provider string, ifName string) string {
+	// default behaviour when no interface name is specified
+	// verify if a custom ifname is provided then annotation will be of form
+	// vm-overlay.default.ovn.net1.kubernetes.io/gateway: 192.168.0.1
+	if ifName != "" {
+		provider = fmt.Sprintf("%s.%s", provider, ifName)
+	}
+	return annotations[fmt.Sprintf(GatewayAnnotationTemplate, provider)]
+}
+
+func GetAllocatedLogicalSwitch(annotations map[string]string, provider string, ifName string) string {
+	// default behaviour when no interface name is specified
+	// verify if a custom ifname is provided then annotation will be of form
+	// vm-overlay.default.ovn.net1.kubernetes.io/logical_switch: vm-overlay
+	if ifName != "" {
+		provider = fmt.Sprintf("%s.%s", provider, ifName)
+	}
+	return annotations[fmt.Sprintf(LogicalSwitchAnnotationTemplate, provider)]
+}
+
+func GetMacAddress(annotations map[string]string, provider string, ifName string) string {
+	// default behaviour when no interface name is specified
+	// verify if a custom ifname is provided then annotation will be of form
+	// vm-overlay.default.ovn.net1.kubernetes.io/mac_address: 0a:58:0a:00:00:01
+	if ifName != "" {
+		provider = fmt.Sprintf("%s.%s", provider, ifName)
+	}
+	return annotations[fmt.Sprintf(MacAddressAnnotationTemplate, provider)]
+}

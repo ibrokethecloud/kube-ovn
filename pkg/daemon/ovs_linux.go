@@ -110,6 +110,9 @@ func (csh cniServerHandler) configureNic(podName, podNamespace, provider, netns,
 
 	ipStr := util.GetIPWithoutMask(ip)
 	ifaceID := ovs.PodNameToPortName(podName, podNamespace, provider)
+	if ifName != "eth0" {
+		ifaceID = fmt.Sprintf("%s.%s", ifaceID, ifName)
+	}
 	ovs.CleanDuplicatePort(ifaceID, hostNicName)
 	if yusur.IsYusurSmartNic(deviceID) {
 		klog.Infof("add Yusur smartnic vfr %s to ovs", hostNicName)
